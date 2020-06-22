@@ -1,0 +1,140 @@
+---------------------------회원----------------------------------------------------
+create table member(
+member_no number primary key
+,member_id varchar(20) not null unique
+,member_passwd varchar(30) not null
+,member_name varchar(20) not null
+);
+
+create sequence seq_member increment by 1 start with 1;
+
+____________________________location--------------------------------------------
+create table location(
+id number primary key,
+first_sep varchar(50) not null,
+second_sep varchar(50) not null,
+third_sep varchar(50) not null,
+nx number not null,
+ny number not null
+);
+
+----------------------------todolist----------------------------------------------
+create table todolist(
+todolist_no number primary key
+, member_no number
+, status_no number
+, content varchar(100) not null
+, duedate varchar(10)
+, foreign key(member_no) references member(member_no)
+, foreign key(status_no) references status(status_no)
+);
+
+create table status(
+status_no number primary key
+, status varchar(10)
+);
+
+insert into status(status_no, status) values(1,'할 일');
+insert into status(status_no, status) values(2,'진행 중');
+insert into status(status_no, status) values(3,'완료');
+
+create sequence seq_todolist increment by 1 start with 1;
+
+
+---------------------다이어리------------------------------------------------------
+CREATE TABLE diary(
+	diary_no NUMBER PRIMARY KEY
+	, member_no NUMBER
+	, member_id varchar(20)
+	, regist_date varchar(20)
+	, regist_time varchar(20)
+	, weathertype NUMBER
+	, feeltype NUMBER
+	, image varchar(50)
+	, content varchar(500)
+	, FOREIGN key(member_no) REFERENCES member(member_no)
+	, FOREIGN key(weathertype) REFERENCES weathertype(weather_id)
+	, FOREIGN key(feeltype) REFERENCES weathertype(weather_id)
+);
+
+CREATE TABLE weathertype(
+	weather_id number PRIMARY KEY
+	, weathertype varchar(20)
+);
+
+CREATE TABLE feeltype(
+	feel_id NUMBER PRIMARY KEY
+	, feeltype varchar(20)
+);
+
+
+
+INSERT INTO weathertype(weather_id, weathertype) values(1, '맑음');
+INSERT INTO weathertype(weather_id, weathertype) values(2, '흐림');
+INSERT INTO weathertype(weather_id, weathertype) values(3, '비 조금');
+INSERT INTO weathertype(weather_id, weathertype) values(4, '소나기');
+INSERT INTO weathertype(weather_id, weathertype) values(5, '번개');
+
+INSERT INTO feeltype(feel_id, feeltype) values(1, '맑음');
+INSERT INTO feeltype(feel_id, feeltype) values(2, '흐림');
+INSERT INTO feeltype(feel_id, feeltype) values(3, '비 조금');
+INSERT INTO feeltype(feel_id, feeltype) values(4, '소나기');
+INSERT INTO feeltype(feel_id, feeltype) values(5, '번개');
+
+
+create sequence seq_diary increment by 1 start with 1;
+create sequence seq_todolist increment by 1 start with 1;
+
+-----------------------------추천------------------------------------------
+create table weather(
+id number primary key,
+name varchar(50) not null
+);
+
+create table store(
+id number primary key,
+name varchar(50) not null,
+address varchar(50) not null,
+phone varchar(50),
+image varchar(300)
+);
+
+create table recommend(
+id number primary key,
+location_id number,
+weather_id number,
+store_id number,
+foreign key(location_id) references location(id),
+foreign key(weather_id) references weather(id),
+foreign key(store_id) references store(id)
+);
+
+
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '맑음');
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '더움');
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '습함');
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '비/소나기');
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '바람');
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '흐림/안개');
+INSERT INTO weather(id, name) VALUES (seq_weather.nextval, '눈');
+
+INSERT INTO store(id, name, address, image)
+ VALUES (seq_store.nextval, '빽다방 종로관철점', '관철동 42-4',
+ 'https://search.pstatic.net/common/?src=http%3A%2F%2Fldb.phinf.naver.net%2F20191019_212%2F1571471269167BYgmN_JPEG%2F0ATu8sY4aIcu1FcfHT1RJJih.jpg');
+
+INSERT INTO store(id, name, address, phone, image)
+ VALUES (seq_store.nextval, '영풍문고 종로본점', '서린동 33', '1522-2776',
+ 'https://search.pstatic.net/common/?src=http%3A%2F%2Fldb.phinf.naver.net%2F20160421_31%2F14612224873355dxkh_JPEG%2F176371563826414_1.jpeg');
+
+INSERT INTO recommend(id, location_id, weather_id, store_id)
+ VALUES (seq_recommend.nextval, (SELECT id FROM location WHERE first_sep='서울특별시' and second_sep='종로구' and third_sep='종로1.2.3.4가동'),
+ (SELECT id FROM weather WHERE name='맑음'), (SELECT id FROM store WHERE name='빽다방 종로관철점'));
+
+INSERT INTO recommend(id, location_id, weather_id, store_id)
+ VALUES (seq_recommend.nextval, (SELECT id FROM location WHERE first_sep='서울특별시' and second_sep='종로구' and third_sep='종로1.2.3.4가동'),
+ (SELECT id FROM weather WHERE name='맑음'), (SELECT id FROM store WHERE name='영풍문고 종로본점'));
+
+
+
+create sequence seq_store increment by 1 start with 1;
+create sequence seq_recommend increment by 1 start with 1;
