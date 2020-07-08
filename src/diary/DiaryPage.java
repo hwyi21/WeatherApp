@@ -57,7 +57,7 @@ public class DiaryPage extends Frame {
 	JLabel la_empty2;
 
 	JPanel p_right; // 우측 컨테이너
-	ImageLabel bt_lookUp; // 목록 조회 버튼
+	
 	JLabel la_titleR; // 제목
 	JPanel content;
 	Thread getDbThread;
@@ -106,7 +106,7 @@ public class DiaryPage extends Frame {
 		la_upload = new ImageLabel(FilePath.buttonDir + "upload.png", 380, 60);
 
 		p_right = new JPanel();
-		bt_lookUp = new ImageLabel(FilePath.buttonDir + "refresh.png", 35, 35);
+		
 		la_titleR = new TextLabel("My Diary", 350, 70, 25);
 
 		content = new JPanel();
@@ -147,7 +147,7 @@ public class DiaryPage extends Frame {
 		p_left.add(la_empty2);
 		p_left.add(la_upload);
 
-		p_right.add(bt_lookUp);
+		
 		p_right.add(la_titleR);
 		p_right.add(content);
 
@@ -156,7 +156,7 @@ public class DiaryPage extends Frame {
 		getDiaryList(member_no);
 
 		la_upload.ifEnteredSetImage(FilePath.buttonDir + "upload_select.png");
-		bt_lookUp.ifEnteredSetImage(FilePath.buttonDir + "refresh_select.png");
+		
 
 		for (int i = 0; i < la_weatherImages.length; i++) {
 			la_weatherImages[i].ifClickedSetImage(FilePath.selectIconDir + selectedImage[i] + ".png", la_weatherImages);
@@ -186,17 +186,6 @@ public class DiaryPage extends Frame {
 			}
 		});
 
-		bt_lookUp.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				Thread thread=new Thread() {
-					public void run() {
-						getDiaryList(member_no);
-						
-					}
-				};
-				thread.start();
-			}
-		});
 	}
 
 	// 이미지파일 선택 후 썸네일 표현
@@ -374,7 +363,7 @@ public class DiaryPage extends Frame {
 		Component[] childList = content.getComponents();
 
 		for (int i = 0; i < childList.length; i++) {
-			if (childList[i] != la_titleR && childList[i] != bt_lookUp) {
+			if (childList[i] != la_titleR ) {
 				content.remove(childList[i]);
 			}
 		}
